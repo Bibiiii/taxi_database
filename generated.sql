@@ -32,11 +32,11 @@ CREATE TABLE shift_times (
 
 CREATE TABLE vehicle_status (
 	status_id INT PRIMARY KEY,
-	description VARCHAR2(45) NOT NULL);
+	description VARCHAR2(45) NOT NULL CHECK (description IN ('roadworthy', 'in_for_service', 'written_off')));
 
 CREATE TABLE driver_employment_types (
 	type_id INT PRIMARY KEY,
-	description VARCHAR2(45) UNIQUE NOT NULL);
+	description VARCHAR2(45) UNIQUE NOT NULL CHECK (description IN ('fixed_salary', 'percent_cut')));
 
 CREATE TABLE vehicle_owners (
 	owner_id INT PRIMARY KEY,
@@ -49,7 +49,7 @@ CREATE TABLE vehicle_owners (
 
 CREATE TABLE client_types (
 	type_id INT PRIMARY KEY,
-	description VARCHAR2(255) NOT NULL);
+	description VARCHAR2(255) NOT NULL CHECK (description IN ('private', 'corporate')));
 
 -- CREATE sequence CLIENT_TYPES_TYPE_ID_SEQ;
 
@@ -108,7 +108,7 @@ CREATE TABLE drivers (
 	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id));
 
 CREATE TABLE operators (
-	operator_id INT PRIMARY KEY,
+	operator_id INT PRIMARY KEY CHECK (operator_id <= 8),
 	first_name VARCHAR2(45) NOT NULL,
 	last_name VARCHAR2(45) NOT NULL,
 	tel VARCHAR2(45) NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE operators (
 CREATE TABLE payments (
 	payment_id INT PRIMARY KEY,
 	card_last_4 VARCHAR2(45) NOT NULL,
-	total_cost INT NOT NULL,
+	total_cost INT NOT NULL CHECK (total_cost > 0),
 	payment_status_id INT NOT NULL,
 	client_id INT NOT NULL,
 	CONSTRAINT payments_fk0 FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id),
