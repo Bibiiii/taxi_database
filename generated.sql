@@ -15,6 +15,7 @@ CREATE TABLE "clients" (
 	"tel" VARCHAR2(45) NOT NULL,
 	"email" VARCHAR2(45) NOT NULL,
 	"address_id" INT NOT NULL,
+	"client_type" INT NOT NULL,
 	constraint CLIENTS_PK PRIMARY KEY ("client_id"));
 
 
@@ -29,6 +30,7 @@ CREATE TABLE "bookings" (
 	"driver_id" INT NOT NULL,
 	"client_id" INT NOT NULL,
 	"payment_id" INT NOT NULL,
+	"booking_type_id" INT NOT NULL,
 	constraint BOOKINGS_PK PRIMARY KEY ("booking_id"));
 
 
@@ -146,13 +148,45 @@ CREATE TABLE "driver_employment_types" (
 
 
 /
+CREATE TABLE "client_types" (
+	"type_id" INT NOT NULL,
+	"description" VARCHAR2(255) NOT NULL,
+	constraint CLIENT_TYPES_PK PRIMARY KEY ("type_id"));
+
+CREATE sequence "CLIENT_TYPES_TYPE_ID_SEQ";
+
+CREATE trigger "BI_CLIENT_TYPES_TYPE_ID"
+  before insert on "client_types"
+  for each row
+begin
+  select "CLIENT_TYPES_TYPE_ID_SEQ".nextval into :NEW."type_id" from dual;
+end;
+
+/
+CREATE TABLE "booking_types" (
+	"booking_type_id" INT NOT NULL,
+	"description" VARCHAR2(255) UNIQUE NOT NULL,
+	constraint BOOKING_TYPES_PK PRIMARY KEY ("booking_type_id"));
+
+CREATE sequence "BOOKING_TYPES_BOOKING_TYPE_ID_SEQ";
+
+CREATE trigger "BI_BOOKING_TYPES_BOOKING_TYPE_ID"
+  before insert on "booking_types"
+  for each row
+begin
+  select "BOOKING_TYPES_BOOKING_TYPE_ID_SEQ".nextval into :NEW."booking_type_id" from dual;
+end;
+
+/
 
 ALTER TABLE "clients" ADD CONSTRAINT "clients_fk0" FOREIGN KEY ("address_id") REFERENCES "addresses"("address_id");
+ALTER TABLE "clients" ADD CONSTRAINT "clients_fk1" FOREIGN KEY ("client_type") REFERENCES "client_types"("type_id");
 
 ALTER TABLE "bookings" ADD CONSTRAINT "bookings_fk0" FOREIGN KEY ("operator_id") REFERENCES "operators"("operator_id");
 ALTER TABLE "bookings" ADD CONSTRAINT "bookings_fk1" FOREIGN KEY ("driver_id") REFERENCES "drivers"("driver_id");
 ALTER TABLE "bookings" ADD CONSTRAINT "bookings_fk2" FOREIGN KEY ("client_id") REFERENCES "clients"("client_id");
 ALTER TABLE "bookings" ADD CONSTRAINT "bookings_fk3" FOREIGN KEY ("payment_id") REFERENCES "payments"("payment_id");
+ALTER TABLE "bookings" ADD CONSTRAINT "bookings_fk4" FOREIGN KEY ("booking_type_id") REFERENCES "booking_types"("booking_type_id");
 
 ALTER TABLE "drivers" ADD CONSTRAINT "drivers_fk0" FOREIGN KEY ("shift_time_id") REFERENCES "shift_times"("shift_time_id");
 ALTER TABLE "drivers" ADD CONSTRAINT "drivers_fk1" FOREIGN KEY ("employment_type") REFERENCES "driver_employment_types"("type_id");
@@ -176,4 +210,6 @@ ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_fk0" FOREIGN KEY ("status_id") R
 ALTER TABLE "vehicles" ADD CONSTRAINT "vehicles_fk1" FOREIGN KEY ("owner_id") REFERENCES "vehicle_owners"("owner_id");
 
 ALTER TABLE "revenue" ADD CONSTRAINT "revenue_fk0" FOREIGN KEY ("booking_id") REFERENCES "bookings"("booking_id");
+
+
 
