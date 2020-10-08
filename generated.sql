@@ -86,6 +86,9 @@ CREATE TABLE drivers (
 	address_id INT NOT NULL,
 	shift_time_id INT NOT NULL,
 	employment_type INT NOT NULL,
+	car_registration_number INT NOT NULL UNIQUE,
+	CONSTRAINT drivers_fk2 FOREIGN KEY (car_id) REFERENCES vehicles(registration_number),
+	CONSTRAINT drivers_fk4 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT drivers_fk0 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id),
 	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id));
 
@@ -167,9 +170,16 @@ CREATE OR REPLACE TRIGGER prevent_status_change_write_off
 	END;
 /
 
+CREATE OR REPLACE TRIGGER 
+	BEFORE 
+	
+	BEGIN
+
+	END;
+/
 COMMIT;
 
-INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1,'64', 'Zoo Lane', 'London', 'SW2 2FA');
+INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1, '64', 'Zoo Lane', 'London', 'SW2 2FA');
 INSERT INTO vehicle_owners(owner_id, first_name, last_name, tel, email, address_id) VALUES (1, 'Joe', 'Bloggs', '01212345', 'Joe@Bloggs.net', 1);
 INSERT INTO vehicle_status(status_id, description) VALUES (1, 'roadworthy');
 INSERT INTO vehicle_status(status_id, description) VALUES (2, 'in_for_service');
