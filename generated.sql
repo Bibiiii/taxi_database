@@ -14,6 +14,8 @@ DROP TABLE shift_times;
 DROP TABLE payment_status;
 DROP TABLE addresses;
 
+SET SERVEROUTPUT ON;
+
 CREATE TABLE addresses (
 	address_id INT PRIMARY KEY,
 	line_1 VARCHAR2(45) NOT NULL,
@@ -32,7 +34,7 @@ CREATE TABLE shift_times (
 
 CREATE TABLE vehicle_status (
 	status_id INT PRIMARY KEY,
-	description VARCHAR2(45) NOT NULL CHECK (description IN ('roadworthy', 'in_for_service', 'written_off')));
+	description VARCHAR2(45) NOT NULL UNIQUE CHECK (description IN ('roadworthy', 'in_for_service', 'written_off')));
 
 CREATE TABLE driver_employment_types (
 	type_id INT PRIMARY KEY,
@@ -51,29 +53,9 @@ CREATE TABLE client_types (
 	type_id INT PRIMARY KEY,
 	description VARCHAR2(255) NOT NULL CHECK (description IN ('private', 'corporate')));
 
--- CREATE sequence CLIENT_TYPES_TYPE_ID_SEQ;
-
--- CREATE trigger BI_CLIENT_TYPES_TYPE_ID
---   before insert on client_types
---   for each row
---   begin
---   select CLIENT_TYPES_TYPE_ID_SEQ.nextval into :NEW.type_id from dual;
---   end;
--- /
-
 CREATE TABLE booking_types (
 	booking_type_id INT PRIMARY KEY,
 	description VARCHAR2(255) UNIQUE NOT NULL);
-
--- CREATE sequence BOOKING_TYPES_BOOKING_TYPE_ID_SEQ;
-
--- CREATE trigger BI_BOOKING_TYPES_BOOKING_TYPE_ID
---   before insert on booking_types
---   for each row
--- begin
---   select BOOKING_TYPES_BOOKING_TYPE_ID_SEQ.nextval into :NEW.booking_type_id from dual;
--- end;
--- /
 
 CREATE TABLE clients (
 	client_id INT PRIMARY KEY,
@@ -88,7 +70,7 @@ CREATE TABLE clients (
 
 CREATE TABLE vehicles (
 	registration_number VARCHAR2(45) PRIMARY KEY,
-	last_mot TIMESTAMP NOT NULL,
+	last_mot DATE NOT NULL,
 	status_id INT NOT NULL,
 	owner_id INT NOT NULL,
 	CONSTRAINT vehicles_fk0 FOREIGN KEY (status_id) REFERENCES vehicle_status(status_id),
@@ -123,7 +105,7 @@ CREATE TABLE operators (
 CREATE TABLE payments (
 	payment_id INT PRIMARY KEY,
 	card_last_4 VARCHAR2(45) NOT NULL,
-	total_cost INT NOT NULL CHECK (total_cost > 0),
+	total_cost NUMBER(10,4) NOT NULL CHECK (total_cost > 0),
 	payment_status_id INT NOT NULL,
 	client_id INT NOT NULL,
 	CONSTRAINT payments_fk0 FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id),
@@ -148,25 +130,52 @@ CREATE TABLE bookings (
 
 CREATE TABLE revenue (
 	revenue_item INT PRIMARY KEY,
-	gross_profit INT NOT NULL,
-	net_profit INT NOT NULL,
+	gross_profit NUMBER(10,4) NOT NULL,
+	net_profit NUMBER(10,4) NOT NULL,
 	booking_id INT NOT NULL,
 	CONSTRAINT revenue_fk0 FOREIGN KEY (booking_id) REFERENCES bookings(booking_id));
 
--- CREATE sequence REVENUE_REVENUE_ITEM_SEQ;
+CREATE OR REPLACE TRIGGER check_MOT_date
+	BEFORE INSERT OR UPDATE
+	ON vehicles
+	FOR EACH ROW
+	BEGIN
+	IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12)) THEN DBMS_OUTPUT.PUT_LINE('There has not been an MOT in the last year. Putting car in for a service.'); 
+	:NEW.status_id := 2;
+	END IF;
+	END;
+/
 
--- CREATE trigger BI_REVENUE_REVENUE_ITEM
---   before insert on revenue
---   for each row
--- begin
---   select REVENUE_REVENUE_ITEM_SEQ.nextval into :NEW.revenue_item from dual;
--- end;
+CREATE OR REPLACE TRIGGER check_MOT_and_status
+	BEFORE UPDATE
+	on vehicles
+	FOR EACH ROW
+	BEGIN
+	IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12) AND :NEW.status_id = 1) THEN
+	 RAISE_APPLICATION_ERROR(-20001, 'You cannot bring this car back on the road while it is in need of an MOT.');
+	END IF;
+	END;
+/
 
--- /
+CREATE OR REPLACE TRIGGER prevent_status_change_write_off
+	BEFORE UPDATE
+	ON vehicles
+	FOR EACH ROW
+	BEGIN
+		IF(:OLD.status_id = 3 AND :NEW.status_id <> 3) THEN RAISE_APPLICATION_ERROR(-20001, 'This vehicle has been written off. You cannot bring it back on the road.');
+		END IF;
+	END;
+/
 
 COMMIT;
 
-
+INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1,'64', 'Zoo Lane', 'London', 'SW2 2FA');
+INSERT INTO vehicle_owners(owner_id, first_name, last_name, tel, email, address_id) VALUES (1, 'Joe', 'Bloggs', '01212345', 'Joe@Bloggs.net', 1);
+INSERT INTO vehicle_status(status_id, description) VALUES (1, 'roadworthy');
+INSERT INTO vehicle_status(status_id, description) VALUES (2, 'in_for_service');
+INSERT INTO vehicle_status(status_id, description) VALUES (3, 'written_off');
+INSERT INTO vehicles(registration_number, last_mot, status_id, owner_id) VALUES ('EA12 DFG', '08-SEP-2018', 1, 1);
+UPDATE vehicles SET status_id = 1 WHERE registration_number = 'EA12 DFG';
 
 
 
