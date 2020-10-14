@@ -87,7 +87,7 @@ CREATE TABLE drivers (
 	shift_time_id INT NOT NULL,
 	employment_type INT NOT NULL,
 	car_registration_number INT NOT NULL UNIQUE,
-	CONSTRAINT drivers_fk2 FOREIGN KEY (car_id) REFERENCES vehicles(registration_number),
+	CONSTRAINT drivers_fk2 FOREIGN KEY (car_registration_number) REFERENCES vehicles(registration_number),
 	CONSTRAINT drivers_fk4 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT drivers_fk0 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id),
 	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id));
@@ -178,7 +178,7 @@ CREATE OR REPLACE TRIGGER
 	END;
 /
 COMMIT;
-
+SET TIMING ON;
 INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1, '64', 'Zoo Lane', 'London', 'SW2 2FA');
 INSERT INTO vehicle_owners(owner_id, first_name, last_name, tel, email, address_id) VALUES (1, 'Joe', 'Bloggs', '01212345', 'Joe@Bloggs.net', 1);
 INSERT INTO vehicle_status(status_id, description) VALUES (1, 'roadworthy');
@@ -186,7 +186,6 @@ INSERT INTO vehicle_status(status_id, description) VALUES (2, 'in_for_service');
 INSERT INTO vehicle_status(status_id, description) VALUES (3, 'written_off');
 INSERT INTO vehicles(registration_number, last_mot, status_id, owner_id) VALUES ('EA12 DFG', '08-SEP-2018', 1, 1);
 UPDATE vehicles SET status_id = 1 WHERE registration_number = 'EA12 DFG';
-
-
+SET TIMING OFF;
 
 
