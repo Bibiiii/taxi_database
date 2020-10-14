@@ -1,18 +1,18 @@
-DROP TABLE revenue;
-DROP TABLE bookings;
-DROP TABLE payments;
-DROP TABLE operators;
-DROP TABLE drivers;
-DROP TABLE vehicles;
-DROP TABLE clients;
-DROP TABLE booking_types;
-DROP TABLE client_types;
-DROP TABLE vehicle_owners;
-DROP TABLE driver_employment_types;
-DROP TABLE vehicle_status;
-DROP TABLE shift_times;
-DROP TABLE payment_status;
-DROP TABLE addresses;
+DROP TABLE revenue PURGE;
+DROP TABLE bookings PURGE;
+DROP TABLE booking_payments PURGE;
+DROP TABLE operators PURGE;
+DROP TABLE drivers PURGE;
+DROP TABLE vehicles PURGE;
+DROP TABLE clients PURGE;
+DROP TABLE booking_types PURGE;
+DROP TABLE client_types PURGE;
+DROP TABLE vehicle_owners PURGE;
+DROP TABLE driver_employment_types PURGE;
+DROP TABLE vehicle_status PURGE;
+DROP TABLE shift_times PURGE;
+DROP TABLE payment_status PURGE;
+DROP TABLE addresses PURGE;
 
 SET SERVEROUTPUT ON;
 
@@ -86,8 +86,7 @@ CREATE TABLE drivers (
 	address_id INT NOT NULL,
 	shift_time_id INT NOT NULL,
 	employment_type INT NOT NULL,
-	car_registration_number INT NOT NULL UNIQUE,
-	CONSTRAINT drivers_fk2 FOREIGN KEY (car_registration_number) REFERENCES vehicles(registration_number),
+	registration_number INT NOT NULL UNIQUE,
 	CONSTRAINT drivers_fk4 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT drivers_fk0 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id),
 	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id));
@@ -105,7 +104,7 @@ CREATE TABLE operators (
 	CONSTRAINT operators_fk0 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT operators_fk1 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id));
 
-CREATE TABLE payments (
+CREATE TABLE booking_payments(	
 	payment_id INT PRIMARY KEY,
 	card_last_4 VARCHAR2(45) NOT NULL,
 	total_cost NUMBER(10,4) NOT NULL CHECK (total_cost > 0),
@@ -128,15 +127,46 @@ CREATE TABLE bookings (
 	CONSTRAINT bookings_fk0 FOREIGN KEY (operator_id) REFERENCES operators(operator_id),
 	CONSTRAINT bookings_fk1 FOREIGN KEY (driver_id) REFERENCES drivers(driver_id),
 	CONSTRAINT bookings_fk2 FOREIGN KEY (client_id) REFERENCES clients(client_id),
-	CONSTRAINT bookings_fk3 FOREIGN KEY (payment_id) REFERENCES payments(payment_id),
+	CONSTRAINT bookings_fk3 FOREIGN KEY (payment_id) REFERENCES booking_payments(payment_id),
 	CONSTRAINT bookings_fk4 FOREIGN KEY (booking_type_id) REFERENCES booking_types(booking_type_id));
+
+CREATE TABLE outgoings (
+	outgoing_id INT PRIMARY KEY,
+	description VARCHAR(45) NOT NULL CHECK (description IN ('gas bill','electricity bill', 'car maintenance', 'wages', 'office expenses')),
+	amount NUMBER(10,4) NOT NULL CHECK (amount > 0)
+)
 
 CREATE TABLE revenue (
 	revenue_item INT PRIMARY KEY,
 	gross_profit NUMBER(10,4) NOT NULL,
 	net_profit NUMBER(10,4) NOT NULL,
-	booking_id INT NOT NULL,
-	CONSTRAINT revenue_fk0 FOREIGN KEY (booking_id) REFERENCES bookings(booking_id));
+	transaction_source INT NOT NULL,
+	current_balance NUMBER(10,4) NOT NULL);
+
+CREATE OR REPLACE TRIGGER check_transaction_source
+	BEFORE INSERT OR UPDATE 
+	ON revenue
+	FOR EACH ROW
+	BEGIN
+		IF (COUNT(SELECT * FROM booking_payments where booking_id = :NEW.transaction_source) = 0)
+			THEN RAISE_APPLICATION_ERROR(-20001, 'Transaction source not recorded in either the bookings or outgoings table.');
+		END IF;
+	END;
+/
+-- WIP
+-- CREATE OR REPLACE TRIGGER update_balance_booking
+-- 	AFTER INSERT 
+-- 	ON booking_payments
+-- 	FOR EACH ROW
+-- 	DECLARE 
+-- 		amount_earned NUMBER(10,4) := :NEW.total_cost;
+-- 		payment_id INT := :NEW.payment_id;
+-- 		current_balance NUMBER(10,4) := :NEW.current_balance;
+-- 	BEGIN
+-- 		INSERT INTO revenue (gross_profit, net_profit, booking_id, current_balance) 
+-- 		VALUES (amount_earned, amount_earned - , , );
+-- 	END;
+-- /
 
 CREATE OR REPLACE TRIGGER check_MOT_date
 	BEFORE INSERT OR UPDATE
@@ -154,9 +184,9 @@ CREATE OR REPLACE TRIGGER check_MOT_and_status
 	on vehicles
 	FOR EACH ROW
 	BEGIN
-	IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12) AND :NEW.status_id = 1) THEN
-	 RAISE_APPLICATION_ERROR(-20001, 'You cannot bring this car back on the road while it is in need of an MOT.');
-	END IF;
+		IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12) AND :NEW.status_id = 1) THEN
+		RAISE_APPLICATION_ERROR(-20001, 'You cannot bring this car back on the road while it is in need of an MOT.');
+		END IF;
 	END;
 /
 
@@ -170,13 +200,6 @@ CREATE OR REPLACE TRIGGER prevent_status_change_write_off
 	END;
 /
 
-CREATE OR REPLACE TRIGGER 
-	BEFORE 
-	
-	BEGIN
-
-	END;
-/
 COMMIT;
 SET TIMING ON;
 INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1, '64', 'Zoo Lane', 'London', 'SW2 2FA');
