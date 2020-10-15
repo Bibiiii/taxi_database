@@ -122,6 +122,7 @@ CREATE TABLE bookings (
 	location_to VARCHAR2(45) NOT NULL,
 	booking_time TIMESTAMP NOT NULL,
 	call_received TIMESTAMP NOT NULL,
+	cost INT NOT NULL,
 	operator_id INT NOT NULL,
 	driver_id INT NOT NULL,
 	client_id INT NOT NULL,
@@ -146,7 +147,7 @@ CREATE TABLE booking_payments(
 CREATE TABLE outgoings (
 	payment_id INT PRIMARY KEY,
 	description VARCHAR(45) NOT NULL CHECK (description IN ('gas bill','electricity bill', 'car maintenance', 'wages', 'office expenses')),
-	amount NUMBER(10,4) NOT NULL CHECK (amount > 0),
+	cost NUMBER(10,4) NOT NULL CHECK (cost > 0),
 	payment_status INT NOT NULL,
 	CONSTRAINT outgoings_fk0 FOREIGN KEY (payment_status) REFERENCES payment_status(payment_status_id)
 );
