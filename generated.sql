@@ -1,18 +1,18 @@
-DROP TABLE revenue;
-DROP TABLE bookings;
-DROP TABLE payments;
-DROP TABLE operators;
-DROP TABLE drivers;
-DROP TABLE vehicles;
-DROP TABLE clients;
-DROP TABLE booking_types;
-DROP TABLE client_types;
-DROP TABLE vehicle_owners;
-DROP TABLE driver_employment_types;
-DROP TABLE vehicle_status;
-DROP TABLE shift_times;
-DROP TABLE payment_status;
-DROP TABLE addresses;
+DROP TABLE revenue CASCADE CONSTRAINTS;
+DROP TABLE bookings CASCADE CONSTRAINTS;
+DROP TABLE payments CASCADE CONSTRAINTS;
+DROP TABLE operators CASCADE CONSTRAINTS;
+DROP TABLE drivers CASCADE CONSTRAINTS;
+DROP TABLE vehicles CASCADE CONSTRAINTS;
+DROP TABLE clients CASCADE CONSTRAINTS;
+DROP TABLE booking_types CASCADE CONSTRAINTS;
+DROP TABLE client_types CASCADE CONSTRAINTS;
+DROP TABLE vehicle_owners CASCADE CONSTRAINTS;
+DROP TABLE driver_employment_types CASCADE CONSTRAINTS;
+DROP TABLE vehicle_status CASCADE CONSTRAINTS;
+DROP TABLE shift_times CASCADE CONSTRAINTS;
+DROP TABLE payment_status CASCADE CONSTRAINTS;
+DROP TABLE addresses CASCADE CONSTRAINTS;
 
 SET SERVEROUTPUT ON;
 
@@ -170,13 +170,8 @@ CREATE OR REPLACE TRIGGER prevent_status_change_write_off
 	END;
 /
 
-CREATE OR REPLACE TRIGGER 
-	BEFORE 
-	
-	BEGIN
+@autoIncrement.sql;
 
-	END;
-/
 COMMIT;
 SET TIMING ON;
 INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1, '64', 'Zoo Lane', 'London', 'SW2 2FA');
