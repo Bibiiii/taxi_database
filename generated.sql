@@ -1,4 +1,3 @@
-
 DROP TABLE revenue CASCADE CONSTRAINTS PURGE;
 DROP TABLE outgoings CASCADE CONSTRAINTS PURGE;
 DROP TABLE bookings CASCADE CONSTRAINTS PURGE;
@@ -15,6 +14,7 @@ DROP TABLE vehicle_status CASCADE CONSTRAINTS PURGE;
 DROP TABLE shift_times CASCADE CONSTRAINTS PURGE;
 DROP TABLE payment_status CASCADE CONSTRAINTS PURGE;
 DROP TABLE addresses CASCADE CONSTRAINTS PURGE;
+
 
 SET SERVEROUTPUT ON;
 
@@ -157,13 +157,12 @@ CREATE TABLE outgoings (
 CREATE TABLE revenue (
 	revenue_item INT PRIMARY KEY,
 	gross_profit NUMBER(10,4) NOT NULL,
-	transaction_source INT NOT NULL,
 	current_balance NUMBER(10,4) NOT NULL
 );
 
+@autoIncrement.sql
 @triggers.sql
 @tablePopulation.sql
-@autoIncrement.sql
                                           
 COMMIT;
 

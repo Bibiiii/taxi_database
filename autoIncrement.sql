@@ -1,5 +1,20 @@
+drop sequence ADDRESS_ID_SEQ;
+drop sequence BOOKINGS_ID_SEQ;
+drop sequence BOOKING_ID_SEQ;
+drop sequence CLIENTS_ID_SEQ;
+drop sequence CLIENT_ID_SEQ;
+drop sequence DRIVER_ID_SEQ;
+drop sequence OPERATOR_ID_SEQ;
+drop sequence OWNER_ID_SEQ;
+drop sequence PAYMENT_ID_SEQ;
+drop sequence PAYMENT_STATUS_SEQ;
+drop sequence REVENUE_ITEM_SEQ;
+drop sequence SHIFT_TIME_ID_SEQ;
+drop sequence STATUS_ID_SEQ;
+drop sequence TYPE_ID_SEQ;
+drop sequence OUTGOINGS_ID_SEQ;
+
 --auto increment for the address table PK.
-DROP SEQUENCE address_id_seq;
 CREATE SEQUENCE address_id_seq;
 
 CREATE OR REPLACE TRIGGER address_id_trig
@@ -59,6 +74,7 @@ CREATE SEQUENCE type_id_seq;
 
 CREATE OR REPLACE TRIGGER type_id_trig
 BEFORE INSERT ON driver_employment_types
+FOR EACH ROW
 BEGIN
 	SELECT type_id_seq.NEXTVAL
 	INTO :NEW.type_id
@@ -108,6 +124,18 @@ BEGIN
 END;
 /
 
+-- auto increment for outgoings table PK.
+CREATE SEQUENCE outgoings_id_seq;
+
+CREATE OR REPLACE TRIGGER outgoings_id_trig
+BEFORE INSERT ON outgoings
+FOR EACH ROW
+BEGIN
+	SELECT outgoings_id_seq.NEXTVAL
+	INTO :NEW.payment_id
+	FROM dual;
+END;
+/
 
 --auto increment for the clients table PK.
 CREATE SEQUENCE clients_id_seq;
