@@ -1,18 +1,20 @@
-DROP TABLE revenue CASCADE CONSTRAINTS;
-DROP TABLE bookings CASCADE CONSTRAINTS;
-DROP TABLE payments CASCADE CONSTRAINTS;
-DROP TABLE operators CASCADE CONSTRAINTS;
-DROP TABLE drivers CASCADE CONSTRAINTS;
-DROP TABLE vehicles CASCADE CONSTRAINTS;
-DROP TABLE clients CASCADE CONSTRAINTS;
-DROP TABLE booking_types CASCADE CONSTRAINTS;
-DROP TABLE client_types CASCADE CONSTRAINTS;
-DROP TABLE vehicle_owners CASCADE CONSTRAINTS;
-DROP TABLE driver_employment_types CASCADE CONSTRAINTS;
-DROP TABLE vehicle_status CASCADE CONSTRAINTS;
-DROP TABLE shift_times CASCADE CONSTRAINTS;
-DROP TABLE payment_status CASCADE CONSTRAINTS;
-DROP TABLE addresses CASCADE CONSTRAINTS;
+
+DROP TABLE revenue CASCADE CONSTRAINTS PURGE;
+DROP TABLE outgoings CASCADE CONSTRAINTS PURGE;
+DROP TABLE bookings CASCADE CONSTRAINTS PURGE;
+DROP TABLE booking_payments CASCADE CONSTRAINTS PURGE;
+DROP TABLE operators CASCADE CONSTRAINTS PURGE;
+DROP TABLE drivers CASCADE CONSTRAINTS PURGE;
+DROP TABLE vehicles CASCADE CONSTRAINTS PURGE;
+DROP TABLE clients  CASCADE CONSTRAINTS PURGE;
+DROP TABLE booking_types CASCADE CONSTRAINTS PURGE;
+DROP TABLE client_types CASCADE CONSTRAINTS PURGE;
+DROP TABLE vehicle_owners CASCADE CONSTRAINTS PURGE;
+DROP TABLE driver_employment_types CASCADE CONSTRAINTS PURGE;
+DROP TABLE vehicle_status CASCADE CONSTRAINTS PURGE;
+DROP TABLE shift_times CASCADE CONSTRAINTS PURGE;
+DROP TABLE payment_status CASCADE CONSTRAINTS PURGE;
+DROP TABLE addresses CASCADE CONSTRAINTS PURGE;
 
 SET SERVEROUTPUT ON;
 
@@ -21,24 +23,29 @@ CREATE TABLE addresses (
 	line_1 VARCHAR2(45) NOT NULL,
 	line_2 VARCHAR2(45),
 	city VARCHAR2(45) NOT NULL,
-	postcode VARCHAR2(45) NOT NULL);
+	postcode VARCHAR2(45) NOT NULL
+);
 
 CREATE TABLE payment_status (
 	payment_status_id INT PRIMARY KEY,
-	description VARCHAR2(45) NOT NULL);	
+	description VARCHAR2(45) NOT NULL
+);	
 
 CREATE TABLE shift_times (
 	shift_time_id INT PRIMARY KEY,
-	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL);
+	start_time VARCHAR(45) NOT NULL,
+	end_time VARCHAR(45) NOT NULL
+);
 
 CREATE TABLE vehicle_status (
 	status_id INT PRIMARY KEY,
-	description VARCHAR2(45) NOT NULL UNIQUE CHECK (description IN ('roadworthy', 'in_for_service', 'written_off')));
+	description VARCHAR2(45) NOT NULL UNIQUE CHECK (description IN ('roadworthy', 'in_for_service', 'written_off'))
+);
 
 CREATE TABLE driver_employment_types (
 	type_id INT PRIMARY KEY,
-	description VARCHAR2(45) UNIQUE NOT NULL CHECK (description IN ('fixed_salary', 'percent_cut')));
+	description VARCHAR2(45) UNIQUE NOT NULL CHECK (description IN ('fixed_salary', 'percent_cut'))
+);
 
 CREATE TABLE vehicle_owners (
 	owner_id INT PRIMARY KEY,
@@ -47,15 +54,18 @@ CREATE TABLE vehicle_owners (
 	tel VARCHAR2(45) NOT NULL,
 	email VARCHAR2(45) NOT NULL,
 	address_id INT NOT NULL,
-	CONSTRAINT vehicle_owners_fk0 FOREIGN KEY (address_id) REFERENCES addresses(address_id));
+	CONSTRAINT vehicle_owners_fk0 FOREIGN KEY (address_id) REFERENCES addresses(address_id)
+);
 
 CREATE TABLE client_types (
 	type_id INT PRIMARY KEY,
-	description VARCHAR2(255) NOT NULL CHECK (description IN ('private', 'corporate')));
+	description VARCHAR2(255) NOT NULL UNIQUE CHECK (description IN ('private', 'corporate'))
+);
 
 CREATE TABLE booking_types (
 	booking_type_id INT PRIMARY KEY,
-	description VARCHAR2(255) UNIQUE NOT NULL);
+	description VARCHAR2(255) UNIQUE NOT NULL
+);
 
 CREATE TABLE clients (
 	client_id INT PRIMARY KEY,
@@ -66,7 +76,8 @@ CREATE TABLE clients (
 	address_id INT NOT NULL, 
 	client_type INT NOT NULL,
 	CONSTRAINT clients_fk0 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
-	CONSTRAINT clients_fk1 FOREIGN KEY (client_type) REFERENCES client_types(type_id));
+	CONSTRAINT clients_fk1 FOREIGN KEY (client_type) REFERENCES client_types(type_id)
+);
 
 CREATE TABLE vehicles (
 	registration_number VARCHAR2(45) PRIMARY KEY,
@@ -74,7 +85,8 @@ CREATE TABLE vehicles (
 	status_id INT NOT NULL,
 	owner_id INT NOT NULL,
 	CONSTRAINT vehicles_fk0 FOREIGN KEY (status_id) REFERENCES vehicle_status(status_id),
-	CONSTRAINT vehicles_fk1 FOREIGN KEY (owner_id) REFERENCES vehicle_owners(owner_id));
+	CONSTRAINT vehicles_fk1 FOREIGN KEY (owner_id) REFERENCES vehicle_owners(owner_id)
+);
 
 CREATE TABLE drivers (
 	driver_id INT PRIMARY KEY,
@@ -85,10 +97,11 @@ CREATE TABLE drivers (
 	date_of_join DATE NOT NULL,
 	address_id INT NOT NULL,
 	shift_time_id INT NOT NULL,
-	employment_type INT NOT NULL,
+	employment_type_id INT NOT NULL,
 	CONSTRAINT drivers_fk4 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT drivers_fk0 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id),
-	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id));
+	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type_id) REFERENCES driver_employment_types(type_id)
+);
 
 CREATE TABLE operators (
 	operator_id INT PRIMARY KEY CHECK (operator_id <= 8),
@@ -101,16 +114,8 @@ CREATE TABLE operators (
 	address_id INT NOT NULL,
 	shift_time_id INT NOT NULL,
 	CONSTRAINT operators_fk0 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
-	CONSTRAINT operators_fk1 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id));
-
-CREATE TABLE payments (
-	payment_id INT PRIMARY KEY,
-	card_last_4 VARCHAR2(45) NOT NULL,
-	total_cost NUMBER(10,4) NOT NULL CHECK (total_cost > 0),
-	payment_status_id INT NOT NULL,
-	client_id INT NOT NULL,
-	CONSTRAINT payments_fk0 FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id),
-	CONSTRAINT payments_fk1 FOREIGN KEY (client_id) REFERENCES clients(client_id));
+	CONSTRAINT operators_fk1 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id)
+);
 
 CREATE TABLE bookings (
 	booking_id INT PRIMARY KEY,
@@ -118,67 +123,48 @@ CREATE TABLE bookings (
 	location_to VARCHAR2(45) NOT NULL,
 	booking_time TIMESTAMP NOT NULL,
 	call_received TIMESTAMP NOT NULL,
+	cost INT NOT NULL,
 	operator_id INT NOT NULL,
 	driver_id INT NOT NULL,
 	client_id INT NOT NULL,
-	payment_id INT NOT NULL,
+	payment_id INT NOT NULL UNIQUE,
 	booking_type_id INT NOT NULL,
 	CONSTRAINT bookings_fk0 FOREIGN KEY (operator_id) REFERENCES operators(operator_id),
 	CONSTRAINT bookings_fk1 FOREIGN KEY (driver_id) REFERENCES drivers(driver_id),
 	CONSTRAINT bookings_fk2 FOREIGN KEY (client_id) REFERENCES clients(client_id),
-	CONSTRAINT bookings_fk3 FOREIGN KEY (payment_id) REFERENCES payments(payment_id),
-	CONSTRAINT bookings_fk4 FOREIGN KEY (booking_type_id) REFERENCES booking_types(booking_type_id));
+	CONSTRAINT bookings_fk4 FOREIGN KEY (booking_type_id) REFERENCES booking_types(booking_type_id)
+);
+
+CREATE TABLE booking_payments(	
+	payment_id INT PRIMARY KEY,
+	total_cost NUMBER(10,4) NOT NULL CHECK (total_cost > 0),
+	payment_status_id INT NOT NULL,
+	client_id INT NOT NULL,
+	CONSTRAINT payments_fk0 FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id),
+	CONSTRAINT payments_fk1 FOREIGN KEY (client_id) REFERENCES clients(client_id),
+	CONSTRAINT payments_fk2 FOREIGN KEY (payment_id) REFERENCES bookings(payment_id)
+);
+
+CREATE TABLE outgoings (
+	payment_id INT PRIMARY KEY,
+	description VARCHAR(45) NOT NULL CHECK (description IN ('gas bill','electricity bill', 'car maintenance', 'wages', 'office expenses')),
+	cost NUMBER(10,4) NOT NULL CHECK (cost > 0),
+	payment_status INT NOT NULL,
+	CONSTRAINT outgoings_fk0 FOREIGN KEY (payment_status) REFERENCES payment_status(payment_status_id)
+);
+
 
 CREATE TABLE revenue (
 	revenue_item INT PRIMARY KEY,
 	gross_profit NUMBER(10,4) NOT NULL,
-	net_profit NUMBER(10,4) NOT NULL,
-	booking_id INT NOT NULL,
-	CONSTRAINT revenue_fk0 FOREIGN KEY (booking_id) REFERENCES bookings(booking_id));
+	transaction_source INT NOT NULL,
+	current_balance NUMBER(10,4) NOT NULL
+);
 
-CREATE OR REPLACE TRIGGER check_MOT_date
-	BEFORE INSERT OR UPDATE
-	ON vehicles
-	FOR EACH ROW
-	BEGIN
-	IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12)) THEN DBMS_OUTPUT.PUT_LINE('There has not been an MOT in the last year. Putting car in for a service.'); 
-	:NEW.status_id := 2;
-	END IF;
-	END;
-/
-
-CREATE OR REPLACE TRIGGER check_MOT_and_status
-	BEFORE UPDATE
-	on vehicles
-	FOR EACH ROW
-	BEGIN
-	IF(:NEW.LAST_MOT < ADD_MONTHS(SYSDATE, -12) AND :NEW.status_id = 1) THEN
-	 RAISE_APPLICATION_ERROR(-20001, 'You cannot bring this car back on the road while it is in need of an MOT.');
-	END IF;
-	END;
-/
-
-CREATE OR REPLACE TRIGGER prevent_status_change_write_off
-	BEFORE UPDATE
-	ON vehicles
-	FOR EACH ROW
-	BEGIN
-		IF(:OLD.status_id = 3 AND :NEW.status_id <> 3) THEN RAISE_APPLICATION_ERROR(-20001, 'This vehicle has been written off. You cannot bring it back on the road.');
-		END IF;
-	END;
-/
-
-@autoIncrement.sql;
-
+@triggers.sql
+@tablePopulation.sql
+@autoIncrement.sql
+                                          
 COMMIT;
-SET TIMING ON;
-INSERT INTO addresses(address_id, line_1, line_2, city, postcode) VALUES (1, '64', 'Zoo Lane', 'London', 'SW2 2FA');
-INSERT INTO vehicle_owners(owner_id, first_name, last_name, tel, email, address_id) VALUES (1, 'Joe', 'Bloggs', '01212345', 'Joe@Bloggs.net', 1);
-INSERT INTO vehicle_status(status_id, description) VALUES (1, 'roadworthy');
-INSERT INTO vehicle_status(status_id, description) VALUES (2, 'in_for_service');
-INSERT INTO vehicle_status(status_id, description) VALUES (3, 'written_off');
-INSERT INTO vehicles(registration_number, last_mot, status_id, owner_id) VALUES ('EA12 DFG', '08-SEP-2018', 1, 1);
-UPDATE vehicles SET status_id = 1 WHERE registration_number = 'EA12 DFG';
-SET TIMING OFF;
 
 
