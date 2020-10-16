@@ -29,7 +29,7 @@ CREATE OR REPLACE TRIGGER create_payment_on_booking
         DBMS_OUTPUT.PUT_LINE('CREATING BOOKING PAYMENT');
         INSERT INTO booking_payments(payment_id, total_cost, payment_status_id, client_id) VALUES (payment_id, cost, 1, client_id);
         DBMS_OUTPUT.PUT_LINE('CREATING REVENUE TABLE ENTRY');
-        INSERT INTO revenue(revenue_item, gross_profit, transaction_source, current_balance) VALUES (payment_id, cost, payment_id, cost);
+        INSERT INTO revenue(revenue_item, gross_profit, current_balance) VALUES (payment_id, cost, cost);
 		SELECT employment_type_id INTO employment_type_id FROM drivers WHERE driver_id = :NEW.driver_id;
 		IF employment_type_id < 2 THEN 
 			DBMS_OUTPUT.PUT_LINE('DEDUCTING WAGE');
@@ -49,7 +49,7 @@ CREATE OR REPLACE TRIGGER update_outgoings
         cost NUMBER(10,4) := :NEW.cost;
 	BEGIN
         DBMS_OUTPUT.PUT_LINE('ADDING OUTGOING TO REVENUE TABLE.');
-		INSERT INTO revenue (revenue_item, gross_profit, transaction_source, current_balance) VALUES (payment_id, - cost, payment_id, - cost);
+		INSERT INTO revenue (revenue_item, gross_profit, current_balance) VALUES (payment_id, - cost, - cost);
 	END;
 /
 
