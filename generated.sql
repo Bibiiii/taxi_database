@@ -1,3 +1,4 @@
+
 DROP TABLE revenue CASCADE CONSTRAINTS PURGE;
 DROP TABLE outgoings CASCADE CONSTRAINTS PURGE;
 DROP TABLE bookings CASCADE CONSTRAINTS PURGE;
@@ -162,7 +163,8 @@ CREATE TABLE revenue (
 
 @triggers.sql
 @tablePopulation.sql
-
+@autoIncrement.sql
+                                          
 COMMIT;
 
 
