@@ -11,7 +11,9 @@ INSERT INTO shift_times(shift_time_id, start_time, end_time) VALUES(3, '16:00', 
 INSERT INTO vehicle_owners(owner_id, first_name, last_name, tel, email, address_id) VALUES (1, 'Joe', 'Bloggs', '01212345', 'Joe@Bloggs.net', 1);
 
 
-INSERT INTO drivers(driver_id, first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, employment_type) VALUES (1, 'Liam', 'Radley', '01234', 'a.turing@taxico.com', '01-JAN-2019', 1, 1, 1);
+INSERT INTO drivers(driver_id, first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, employment_type_id) VALUES (1, 'Liam', 'Radley', '01234', 'l.radley@taxico.com', '01-JAN-2019', 1, 1, 1);
+INSERT INTO drivers(driver_id, first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, employment_type_id) VALUES (2, 'Bill', 'Gates', '01234', 'b.gates@taxico.com', '01-JAN-2019', 1, 1, 2);
+
 
 INSERT INTO operators(operator_id, first_name, last_name, tel, email, call_count, date_of_join, address_id, shift_time_id) VALUES (1, 'Ada', 'Lovelace', '01111', 'a.lovelace@taxico.com', 1, '01-JAN-2018', 1, 1);
 
@@ -34,8 +36,8 @@ INSERT INTO payment_status(payment_status_id, description) VALUES (1, 'paid');
 INSERT INTO booking_types(booking_type_id, description) VALUES (1, 'One-off');
 
 INSERT INTO bookings(booking_id, location_from, location_to, booking_time, call_received, cost, operator_id, driver_id, client_id, payment_id, booking_type_id) VALUES (1, 'Home', 'Work', TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), 25, 1, 1, 1, 1, 1);
-INSERT INTO bookings(booking_id, location_from, location_to, booking_time, call_received, cost, operator_id, driver_id, client_id, payment_id, booking_type_id) VALUES (2, 'Home', 'Work', TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), 25, 1, 1, 1, 2, 1);
+INSERT INTO bookings(booking_id, location_from, location_to, booking_time, call_received, cost, operator_id, driver_id, client_id, payment_id, booking_type_id) VALUES (2, 'Home', 'Work', TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), TO_TIMESTAMP ('10-Sep-02 14:10:10.123000', 'DD-Mon-RR HH24:MI:SS.FF'), 25, 1, 2, 1, 3, 1);
 
-INSERT INTO outgoings(payment_id, description, cost, payment_status) VALUES(3, 'gas bill', 20, 1);
+-- INSERT INTO outgoings(payment_id, description, cost, payment_status) VALUES(3, 'gas bill', 20, 1);
 
 SET TIMING OFF;

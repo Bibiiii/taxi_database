@@ -1,4 +1,3 @@
-
 -- CREATE OR REPLACE TRIGGER check_transaction_source
 -- 	BEFORE INSERT OR UPDATE 
 -- 	ON revenue
@@ -15,6 +14,8 @@
 -- 	END;
 -- /
 
+-- ^ not sure if we need this, the process will have now been automated. ^
+
 CREATE OR REPLACE TRIGGER create_payment_on_booking
     AFTER INSERT
     ON bookings
@@ -23,11 +24,19 @@ CREATE OR REPLACE TRIGGER create_payment_on_booking
         payment_id INT := :NEW.payment_id;
         client_id INT := :NEW.client_id;
         cost NUMBER(10, 4) := :NEW.cost;
+		employment_type_id VARCHAR(45);
     BEGIN
         DBMS_OUTPUT.PUT_LINE('CREATING BOOKING PAYMENT');
         INSERT INTO booking_payments(payment_id, total_cost, payment_status_id, client_id) VALUES (payment_id, cost, 1, client_id);
         DBMS_OUTPUT.PUT_LINE('CREATING REVENUE TABLE ENTRY');
         INSERT INTO revenue(revenue_item, gross_profit, transaction_source, current_balance) VALUES (payment_id, cost, payment_id, cost);
+		SELECT employment_type_id INTO employment_type_id FROM drivers WHERE driver_id = :NEW.driver_id;
+		IF employment_type_id < 2 THEN 
+			DBMS_OUTPUT.PUT_LINE('DEDUCTING WAGE');
+			INSERT INTO outgoings(payment_id, description, cost, payment_status) VALUES (payment_id + 1, 'wages', 0.1 * cost, 1);
+		ELSE 
+			DBMS_OUTPUT.PUT_LINE('NO WAGE TO DEDUCT');
+		END IF;
     END;
 /
 

@@ -96,10 +96,10 @@ CREATE TABLE drivers (
 	date_of_join DATE NOT NULL,
 	address_id INT NOT NULL,
 	shift_time_id INT NOT NULL,
-	employment_type INT NOT NULL,
+	employment_type_id INT NOT NULL,
 	CONSTRAINT drivers_fk4 FOREIGN KEY (address_id) REFERENCES addresses(address_id),
 	CONSTRAINT drivers_fk0 FOREIGN KEY (shift_time_id) REFERENCES shift_times(shift_time_id),
-	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type) REFERENCES driver_employment_types(type_id)
+	CONSTRAINT drivers_fk1 FOREIGN KEY (employment_type_id) REFERENCES driver_employment_types(type_id)
 );
 
 CREATE TABLE operators (
