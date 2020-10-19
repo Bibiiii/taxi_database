@@ -66,8 +66,6 @@ CREATE OR REPLACE TRIGGER update_balance
     END;
 /
 
-
-
 CREATE OR REPLACE TRIGGER check_MOT_date
 	BEFORE INSERT OR UPDATE
 	ON vehicles
@@ -98,4 +96,12 @@ CREATE OR REPLACE TRIGGER prevent_status_change_write_off
 		IF(:OLD.status_id = 3 AND :NEW.status_id <> 3) THEN RAISE_APPLICATION_ERROR(-20001, 'This vehicle has been written off. You cannot bring it back on the road.');
 		END IF;
 	END;
+/
+
+CREATE OR REPLACE TRIGGER no_editing_outgoings
+	BEFORE UPDATE OR DELETE
+	ON outgoings
+	BEGIN
+		RAISE_APPLICATION_ERROR(-20001, 'You cannot alter values that would cause an inconsistency in the balance sheet.');
+	END; 
 /
