@@ -1,0 +1,8 @@
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Cass', 'Seath', '533 647 5914', 'cseath0@wufoo.com', '16-Jun-2019', 2001, 3, 753);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Luciano', 'Bowskill', '441 690 1690', 'lbowskill1@phpbb.com', '01-Apr-2018', 2002, 2, 1163);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Philbert', 'Apdell', '893 433 6868', 'papdell2@dyndns.org', '03-Nov-2015', 2003, 1, 353);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Sile', 'Tesdale', '971 496 0528', 'stesdale3@youtube.com', '23-Apr-2019', 2004, 1, 8);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Kelwin', 'Felce', '608 595 8691', 'kfelce4@wikimedia.org', '02-Apr-2020', 2005, 1, 577);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Rutger', 'Philbrook', '785 645 5796', 'rphilbrook5@springer.com', '29-Jan-2017', 2006, 2, 1622);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Morten', 'Franchyonok', '454 359 9938', 'mfranchyonok6@usatoday.com', '11-Apr-2020', 2007, 2, 1704);
+insert into operators (first_name, last_name, tel, email, date_of_join, address_id, shift_time_id, call_count) values ('Waylan', 'Chancellor', '951 377 9407', 'wchancellor7@symantec.com', '02-Jun-2017', 2008, 1, 963);
