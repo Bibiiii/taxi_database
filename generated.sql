@@ -121,7 +121,7 @@ CREATE TABLE bookings (
 	booking_id INT PRIMARY KEY,
 	location_from VARCHAR2(45) NOT NULL,
 	location_to VARCHAR2(45) NOT NULL,
-	booking_time TIMESTAMP NOT NULL,
+	booking_datetime TIMESTAMP NOT NULL,
 	call_received TIMESTAMP NOT NULL,
 	cost INT NOT NULL,
 	operator_id INT NOT NULL,

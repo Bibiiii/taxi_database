@@ -186,7 +186,7 @@ END;
 CREATE SEQUENCE payment_id_seq;
 
 CREATE OR REPLACE TRIGGER payment_id_trig
-BEFORE INSERT ON payments
+BEFORE INSERT ON booking_payments
 FOR EACH ROW
 BEGIN
 	SELECT payment_id_seq.NEXTVAL
