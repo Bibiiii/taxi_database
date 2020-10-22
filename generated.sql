@@ -137,7 +137,7 @@ CREATE TABLE bookings (
 
 CREATE TABLE booking_payments(	
 	payment_id INT PRIMARY KEY,
-	total_cost NUMBER NOT NULL CHECK (total_cost > 0),
+	total_cost NUMBER(10,2) NOT NULL CHECK (total_cost > 0),
 	payment_status_id INT NOT NULL,
 	client_id INT NOT NULL,
 	CONSTRAINT payments_fk0 FOREIGN KEY (payment_status_id) REFERENCES payment_status(payment_status_id),
@@ -148,7 +148,7 @@ CREATE TABLE booking_payments(
 CREATE TABLE outgoings (
 	payment_id INT PRIMARY KEY,
 	description VARCHAR(45) NOT NULL CHECK (description IN ('gas bill','electricity bill', 'car maintenance', 'wages', 'office expenses')),
-	cost NUMBER NOT NULL CHECK (cost > 0),
+	cost NUMBER(10,2) NOT NULL CHECK (cost > 0),
 	payment_status INT NOT NULL,
 	CONSTRAINT outgoings_fk0 FOREIGN KEY (payment_status) REFERENCES payment_status(payment_status_id)
 );
@@ -156,8 +156,8 @@ CREATE TABLE outgoings (
 
 CREATE TABLE revenue (
 	revenue_item INT PRIMARY KEY,
-	gross_profit NUMBER NOT NULL,
-	current_balance NUMBER NOT NULL
+	gross_profit NUMBER(10,2) NOT NULL,
+	current_balance NUMBER(10,2) NOT NULL
 );
 
 @autoIncrement.sql
