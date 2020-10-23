@@ -6,7 +6,6 @@ drop sequence CLIENT_ID_SEQ;
 drop sequence DRIVER_ID_SEQ;
 drop sequence OPERATOR_ID_SEQ;
 drop sequence OWNER_ID_SEQ;
-drop sequence PAYMENT_ID_SEQ;
 drop sequence PAYMENT_STATUS_SEQ;
 drop sequence REVENUE_ITEM_SEQ;
 drop sequence SHIFT_TIME_ID_SEQ;
