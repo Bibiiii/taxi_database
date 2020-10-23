@@ -21,7 +21,7 @@ INSERT INTO shift_times(start_time, end_time) VALUES('16:00', '24:00');
 INSERT INTO client_types(description) VALUES ('corporate');
 INSERT INTO client_types(description) VALUES ('private');
 
--- adderss id 2009-3008
+-- adderss id 2009-5000
 @clientPopulation.sql
 
 INSERT INTO vehicle_status(description) VALUES ('roadworthy');
