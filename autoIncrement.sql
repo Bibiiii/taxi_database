@@ -181,21 +181,6 @@ BEGIN
 END;
 /
 
-
---auto increment for the payments table PK.
-CREATE SEQUENCE payment_id_seq;
-
-CREATE OR REPLACE TRIGGER payment_id_trig
-BEFORE INSERT ON booking_payments
-FOR EACH ROW
-BEGIN
-	SELECT payment_id_seq.NEXTVAL
-	INTO :NEW.payment_id
-	FROM dual;
-END;
-/
-
-
 --auto increment for the bookings table PK.
 CREATE SEQUENCE bookings_id_seq;
 
@@ -205,6 +190,9 @@ FOR EACH ROW
 BEGIN
 	SELECT bookings_id_seq.NEXTVAL
 	INTO :NEW.booking_id
+	FROM dual;
+	SELECT bookings_id_seq.NEXTVAL
+	INTO :NEW.payment_id
 	FROM dual;
 END;
 /

@@ -23,7 +23,7 @@ CREATE OR REPLACE TRIGGER create_payment_on_booking
     DECLARE
         payment_id INT := :NEW.payment_id;
         client_id INT := :NEW.client_id;
-        cost NUMBER(10, 4) := :NEW.cost;
+        cost NUMBER(10,2) := :NEW.cost;
 		employment_type_id VARCHAR(45);
     BEGIN
         DBMS_OUTPUT.PUT_LINE('CREATING BOOKING PAYMENT');
@@ -46,7 +46,7 @@ CREATE OR REPLACE TRIGGER update_outgoings
 	FOR EACH ROW
 	DECLARE
         payment_id INT := :NEW.payment_id;
-        cost NUMBER(10,4) := :NEW.cost;
+        cost NUMBER(10,2) := :NEW.cost;
 	BEGIN
         DBMS_OUTPUT.PUT_LINE('ADDING OUTGOING TO REVENUE TABLE.');
 		INSERT INTO revenue (revenue_item, gross_profit, current_balance) VALUES (payment_id, - cost, - cost);
@@ -58,7 +58,7 @@ CREATE OR REPLACE TRIGGER update_balance
     ON REVENUE
     FOR EACH ROW
     DECLARE
-        current_balance NUMBER(10,4);
+        current_balance NUMBER(10,2);
     BEGIN
         SELECT current_balance INTO current_balance FROM revenue WHERE revenue_item = (SELECT MAX(revenue_item) FROM revenue);
         :NEW.current_balance := :NEW.gross_profit + current_balance;
