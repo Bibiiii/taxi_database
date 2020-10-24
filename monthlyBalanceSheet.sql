@@ -8,12 +8,12 @@ CLEAR COMPUTE
 TTITLE OFF
 BTITLE OFF
 SET PAGESIZE 80
-SET LINESIZE 90
-COLUMN 'revenue_item' HEADING 'Transaction Number'
-COLUMN 'gross_profit' HEADING 'Amount'
-COLUMN 'current_balance' HEADING 'Current Amount'
-COLUMN 'booking_datetime' HEADING 'Date and Time of Transaction'
-COLUMN 'description' HEADING 'Description'
+SET LINESIZE 100
+COLUMN 'revenue_item' HEADING 'Transaction Number' format 99999
+COLUMN 'gross_profit' HEADING 'Amount' format 9,999.99
+COLUMN 'current_balance' HEADING 'Current Amount' format 9,999,999.99
+COLUMN 'DATETIME' HEADING 'Date and Time of Transaction' format a30
+COLUMN 'description' HEADING 'Description' format a25
 
 TTITLE CENTER "B A L A N C E  S H E E T" SKIP 4-
 
@@ -22,7 +22,7 @@ SET TERMOUT ON
 PROMPT Enter day, month and year to check.
 ACCEPT check_date CHAR PROMPT '(DD-MON-YYYY) : ' 
 spool monthlybalancesheet.lst
-SELECT DISTINCT revenue_item, gross_profit, current_balance, booking_datetime, description 
+SELECT DISTINCT revenue_item, gross_profit, current_balance, to_char(booking_datetime) as datetime, description 
 FROM revenue 
 FULL OUTER JOIN bookings 
 ON revenue.revenue_item = bookings.booking_id 
