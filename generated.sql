@@ -123,7 +123,7 @@ CREATE TABLE bookings (
 	location_to VARCHAR2(45) NOT NULL,
 	booking_datetime TIMESTAMP NOT NULL,
 	call_received TIMESTAMP NOT NULL,
-	cost INT NOT NULL,
+	cost NUMBER(10,2) NOT NULL CHECK (cost > 0),
 	operator_id INT NOT NULL,
 	driver_id INT NOT NULL,
 	client_id INT NOT NULL,
