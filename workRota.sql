@@ -7,15 +7,23 @@ CLEAR BREAK
 CLEAR COMPUTE
 TTITLE OFF
 BTITLE OFF
-SET PAGESIZE 80
-SET LINESIZE 95
+
+SET PAGESIZE 100
+SET LINESIZE 78
+
+COLUMN "name" HEADING "Name" format a25
+COLUMN "start_time" HEADING "Start" format a25
+COLUMN "end_time" HEADING "End" format a25
+
 
 TTITLE CENTER "W O R K  R O T A" SKIP 4-
 
 
 SET TERMOUT ON
 spool workrota.lst
-SELECT DISTINCT revenue_item, gross_profit, current_balance, booking_datetime from revenue FULL OUTER JOIN bookings ON revenue.revenue_item = bookings.booking_id where booking_datetime > TO_DATE('&&check_date', 'DD-MON-YYYY') and booking_datetime < ADD_MONTHS(TO_DATE('&&check_date', 'DD-MON-YYYY') , 1) and current_balance IS NOT NULL order by revenue_item;  
+
+SELECT (first_name || ' ' || last_name) AS name, start_time, end_time FROM drivers right join shift_times on drivers.shift_time_id = shift_times.shift_time_id order by drivers.shift_time_id, last_name;
+
 spool off
 CLEAR COLUMN
 CLEAR BREAK
