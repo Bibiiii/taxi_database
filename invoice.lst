@@ -1,19 +1,25 @@
 
-                      C L I E N T  I N V O I C E                      
-                                                                      
-                                                                      
-                                                                      
-QMTaxico                                                   client_name
-Mile End                                                              
-London                                                                
-Client id:                                                            
-LOCATION_FROM                                                         
----------------------------------------------                         
-LOCATION_TO                                         COST PAYMENT_ID   
---------------------------------------------- ---------- ----------   
-5 Jenifer Pass                                                        
-66 Hovde Avenue                                       47        570   
-                                                                      
-666 Little Fleur Alley                                                
-12 Autumn Leaf Alley                                  33        742   
-                                                                      
+                                               C L I E N T  I N V O I C E                                               
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+QMTaxico                                                                                                                
+Mile End                                                                                                                
+London                                                                                                                  
+E1 4NS                                                                                                                  
+United Kingdom                                                                                                          
+                                                                                                                        
+                                                                                                                        
+Invoice date: 24-Oct-2020                                                                                               
+                                                                                                                        
+Client id:       1000                                                                                                   
+                                                                                                                        
+Client name               Location travelled from   Location travelled to            Cost Payment ID                    
+------------------------- ------------------------- ------------------------- ----------- ----------                    
+Brook Lackney             56 Melody Street          2 Saint Paul Plaza             106.00        548                    
+                          22 Nobel Lane             09460 Ryan Alley                13.00       1340                    
+                          6781 Stuart Court         1094 Elmside Place              84.00       1622                    
+*************************                                                     -----------                               
+Total                                                                              203.00                               
+                                                                                                                        
+                                                                                                                        
