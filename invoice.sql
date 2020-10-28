@@ -42,7 +42,6 @@ where clients.client_id = &&client
 and bookings.client_id = &&client
 and booking_payments.payment_status_id != 2
 ORDER BY payment_id;
-
 spool off
 CLEAR COLUMN
 CLEAR BREAK
