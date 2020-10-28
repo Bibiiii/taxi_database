@@ -16,7 +16,7 @@ COLUMN "first_name" HEADING "First name" format a15
 COLUMN "last_name" HEADING "Last name" format a15
 COLUMN "count(booking_id)" HEADING "Number of bookings" format 999
 COLUMN "count(*)" HEADING "Number of calls taken"
-TTITLE CENTER "D R I V E R  M E T R I C S" SKIP 4-
+TTITLE CENTER "D A Y  M E T R I C S" SKIP 4-
 
 SET TERMOUT ON
 PROMPT Please enter the day you wish to examine.

@@ -1,1 +1,30 @@
+CLEAR SCREEN
+SET FEEDBACK OFF
+SET TERMOUT OFF
+SET VERIFY OFF
+CLEAR COLUMN
+CLEAR BREAK
+CLEAR COMPUTE
+TTITLE OFF
+BTITLE OFF
+SET PAGESIZE 100
+SET LINESIZE 78
+
+COLUMN "client_id" HEADING "Client ID" format 9999
+COLUMN "cost" HEADING "Cost" format 9,999.99
+
+
+TTITLE CENTER "M A X  F A R E" SKIP 4-
+
+
+spool maxfare.lst
 select client_id, cost from bookings where cost = (select MAX(cost) from bookings);
+spool off
+CLEAR COLUMN
+CLEAR BREAK
+CLEAR COMPUTE
+TTITLE OFF
+BTITLE OFF
+
+
+
