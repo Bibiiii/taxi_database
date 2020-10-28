@@ -1,0 +1,1 @@
+select client_id, cost from bookings where cost = (select MAX(cost) from bookings);

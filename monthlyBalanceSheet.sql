@@ -28,8 +28,7 @@ FULL OUTER JOIN bookings
 ON revenue.revenue_item = bookings.booking_id 
 FULL OUTER JOIN outgoings 
 ON revenue.revenue_item = outgoings.payment_id 
-WHERE booking_datetime > TO_DATE('&&check_date', 'DD-MON-YYYY') 
-AND booking_datetime < ADD_MONTHS(TO_DATE('&&check_date', 'DD-MON-YYYY') , 1) 
+WHERE booking_datetime BETWEEN TO_DATE('&&check_date', 'DD-MON-YYYY') AND ADD_MONTHS(TO_DATE('&&check_date', 'DD-MON-YYYY') , 1) 
 AND current_balance IS NOT NULL 
 ORDER BY revenue_item;  
 SPOOL OFF
