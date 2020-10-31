@@ -10,7 +10,7 @@ INSERT INTO shift_times(start_time, end_time) VALUES('08:00', '16:00');
 INSERT INTO shift_times(start_time, end_time) VALUES('16:00', '24:00');
 
 -- address id 1-1000
-@veichleOwnerPopulation.sql
+@vehicleOwnerPopulation.sql
 
 -- address id 1001-2000
 @driverPopulation.sql

@@ -1,0 +1,35 @@
+CLEAR SCREEN
+SET FEEDBACK OFF
+SET TERMOUT OFF
+SET VERIFY OFF
+CLEAR COLUMN
+CLEAR BREAK
+CLEAR COMPUTE
+TTITLE OFF
+BTITLE OFF
+
+SET PAGESIZE 100
+SET LINESIZE 78
+
+COLUMN "registration_number" HEADING "Registration Number" format a25
+COLUMN "last_mot" HEADING "Date of Last MOT" format a25
+COLUMN "owner_id" HEADING "Owner ID" format 9,999
+
+
+TTITLE CENTER "N E X T  M O T" SKIP 4-
+
+SET TERMOUT ON
+spool nextMOT.lst
+
+
+SELECT registration_number, last_mot, owner_id
+FROM vehicles
+WHERE last_mot=(
+SELECT MIN(last_mot) FROM vehicles);
+
+spool off
+CLEAR COLUMN
+CLEAR BREAK
+CLEAR COMPUTE
+TTITLE OFF
+BTITLE OFF
