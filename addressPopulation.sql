@@ -4298,3 +4298,5 @@ insert into addresses (line_1, line_2, city, postcode) values ('906 Mifflin Park
 insert into addresses (line_1, line_2, city, postcode) values ('777 Heath Circle', 'Muir', 'Neftegorsk', 'WY41 2TU');
 insert into addresses (line_1, line_2, city, postcode) values ('56380 Eagan Pass', null, 'Beslan', 'JX8 1DX');
 insert into addresses (line_1, line_2, city, postcode) values ('068 Straubel Alley', 'Bartillon', 'Gaoyan', 'JK48 0AR');
+insert into addresses (line_1, line_2, city, postcode) values ('61 London Road', 'Jackson', 'Gaoyan', 'WD23 112');
+insert into addresses (line_1, line_2, city, postcode) values ('117 Tangley Pass', null, 'Gaoyan', 'WD23 118');

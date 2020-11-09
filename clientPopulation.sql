@@ -997,4 +997,5 @@ insert into clients (first_name, last_name, tel, email, address_id, client_type)
 insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Kendra', 'Smalman', '769 666 3014', 'ksmalmanro@google.cn', 3005, 1);
 insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Sigvard', 'Ineson', '456 843 2482', 'sinesonrp@msu.edu', 3006, 1);
 insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Reta', 'Eastbrook', '866 622 3225', 'reastbrookrq@netlog.com', 3007, 2);
-insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Brook', 'Lackney', '761 224 8135', 'blackneyrr@telegraph.co.uk', 3008, 2);
+insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Brook', 'Lackney', '761 224 8135', 'blackneyrr@telegraph.co.uk', 3008, 2);    
+insert into clients (first_name, last_name, tel, email, address_id, client_type) values ('Lucy', 'Something', '420 996 6666', 'lucy@animalprision.co.uk', 4301, 2);

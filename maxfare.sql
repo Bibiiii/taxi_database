@@ -16,7 +16,6 @@ COLUMN "cost" HEADING "Cost" format 9,999.99
 
 TTITLE CENTER "M A X  F A R E" SKIP 4-
 
-
 spool maxfare.lst
 select client_id, cost from bookings where cost = (select MAX(cost) from bookings);
 spool off
