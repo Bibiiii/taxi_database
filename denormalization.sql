@@ -1,21 +1,3 @@
-DROP TABLE revenue CASCADE CONSTRAINTS PURGE;
-DROP TABLE outgoings CASCADE CONSTRAINTS PURGE;
-DROP TABLE bookings CASCADE CONSTRAINTS PURGE;
-DROP TABLE booking_payments CASCADE CONSTRAINTS PURGE;
-DROP TABLE operators CASCADE CONSTRAINTS PURGE;
-DROP TABLE drivers CASCADE CONSTRAINTS PURGE;
-DROP TABLE vehicles CASCADE CONSTRAINTS PURGE;
-DROP TABLE clients  CASCADE CONSTRAINTS PURGE;
-DROP TABLE booking_types CASCADE CONSTRAINTS PURGE;
-DROP TABLE client_types CASCADE CONSTRAINTS PURGE;
-DROP TABLE vehicle_owners CASCADE CONSTRAINTS PURGE;
-DROP TABLE driver_employment_types CASCADE CONSTRAINTS PURGE;
-DROP TABLE vehicle_status CASCADE CONSTRAINTS PURGE;
-DROP TABLE shift_times CASCADE CONSTRAINTS PURGE;
-DROP TABLE payment_status CASCADE CONSTRAINTS PURGE;
-DROP TABLE addresses CASCADE CONSTRAINTS PURGE;
-DROP TABLE employees  CASCADE CONSTRAINTS PURGE;
-
 SET SERVEROUTPUT ON;
 
 -- EXPERIMENT BEFORE DENORMALIZATION
@@ -38,7 +20,10 @@ CREATE TABLE employees (
     employee_id INT PRIMARY KEY,
     first_name VARCHAR2(45) NOT NULL,
     last_name VARCHAR2(45) NOT NULL,
+	tel VARCHAR2(45),
+	email VARCHAR2(45) NOT NULL,
     shift_time_id INT NOT NULL,
+	date_of_join DATE NOT NULL 
 );
 
 CREATE OR REPLACE PROCEDURE add_employee (
@@ -54,7 +39,6 @@ BEGIN
 END add_employee;
 /
 
-@tablePopulation.sql
 @autoIncrement.sql
 
 drop sequence employee_id_seq;
@@ -74,9 +58,29 @@ END;
 
 @triggers.sql
 
+CREATE OR REPLACE TRIGGER add_employee_operator
+    BEFORE INSERT
+    ON OPERATORS
+    FOR EACH ROW
+    BEGIN
+		add_employee(:NEW.first_name, :NEW.last_name, :NEW.tel, :NEW.email, :NEW.shift_time_id);
+    END;
+/
+
+CREATE OR REPLACE TRIGGER add_employee_driver
+    BEFORE INSERT
+    ON DRIVERS
+    FOR EACH ROW
+    BEGIN
+		add_employee(:NEW.first_name, :NEW.last_name, :NEW.tel, :NEW.email, :NEW.shift_time_id);
+    END;
+/
+
+@tablePopulation.sql
+
 SELECT first_name, last_name
 FROM employees
-WHERE shift_time_id = 3
+WHERE shift_time_id = 3;
                                           
 COMMIT;
 
