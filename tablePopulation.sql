@@ -9,19 +9,15 @@ INSERT INTO shift_times(start_time, end_time) VALUES('00:00', '08:00');
 INSERT INTO shift_times(start_time, end_time) VALUES('08:00', '16:00');
 INSERT INTO shift_times(start_time, end_time) VALUES('16:00', '24:00');
 
--- address id 1-1000
 @vehicleOwnerPopulation.sql
 
--- address id 1001-2000
 @driverPopulation.sql
 
--- address id 2001-2008
 @operatorPopulation.sql
 
 INSERT INTO client_types(description) VALUES ('corporate');
 INSERT INTO client_types(description) VALUES ('private');
 
--- adderss id 2009-5000
 @clientPopulation.sql
 
 INSERT INTO vehicle_status(description) VALUES ('roadworthy');
